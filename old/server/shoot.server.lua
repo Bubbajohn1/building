@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage").Events
 local ShootEvent = ReplicatedStorage:WaitForChild("ShootEvent")
 local data = require(game:GetService("ReplicatedStorage").Shared.weapons)
 local datastore = require(script.Parent.data)
+-- local framework = require(game:GetService("ReplicatedStorage").Shared.instance)
 
 local bodyPartToWeaponKey = {
 	Head = "Damage  (Head)",
@@ -34,17 +35,46 @@ end
 
 local lastFireTimes = {}
 
-ShootEvent.OnServerEvent:Connect(function(player, origin, direction, weapon)
+function create_beam(origin, direction)
+	local MAX_DISTANCE = 1000 -- studs
+	local TRACER_COLOR = Color3.fromRGB(255, 255, 0)
+	local TRACER_TRANSPARENCY = 0.3
+	local TRACER_THICKNESS = 0.2
+	local TRACER_TIME = 10 -- how long the tracer lasts
+
+	-- Create tracer part
+	local tracer = Instance.new("Part")
+	tracer.Anchored = true
+	tracer.CanCollide = false
+	tracer.Material = Enum.Material.Neon
+	tracer.Color = TRACER_COLOR
+	tracer.Transparency = TRACER_TRANSPARENCY
+	tracer.Size =
+		Vector3.new(TRACER_THICKNESS, TRACER_THICKNESS, (origin - origin + direction.Unit * MAX_DISTANCE).Magnitude)
+	tracer.CFrame = CFrame.new(origin, origin + direction.Unit * MAX_DISTANCE) * CFrame.new(0, 0, -tracer.Size.Z / 2)
+	tracer.Parent = workspace
+
+	-- Optionally delete tracer after a short delay
+	game.Debris:AddItem(tracer, TRACER_TIME)
+end
+
+ShootEvent.OnServerEvent:Connect(function(player, index)
 	local playerData = datastore.LoadData(player)
 	if not playerData then
 		return
 	end
+	print("printing playerdata")
+	print(playerData)
+	print(playerData.Inventory)
+	-- local weapon = framework.inventory[framework.weapon_index]
+	local weapon = playerData.Inventory[index]
 	local weaponName = weapon.name:lower()
 	local weaponData = weapons[weaponName]
 	if not weaponData then
 		return
 	end
-
+	local origin = workspace.CurrentCamera.CFrame.Position
+	local direction = workspace.CurrentCamera.CFrame.LookVector * weaponData["Bullet Range"]
 	local now = tick()
 	lastFireTimes[player] = lastFireTimes[player] or {}
 	local lastFire = lastFireTimes[player][weaponName] or 0
@@ -56,6 +86,7 @@ ShootEvent.OnServerEvent:Connect(function(player, origin, direction, weapon)
 
 	lastFireTimes[player][weaponName] = now
 	ensureInventoryFields(playerData.Inventory)
+
 	local ammo = nil
 	local reserve = nil
 	for i, v in pairs(playerData.Inventory) do
@@ -116,6 +147,7 @@ ShootEvent.OnServerEvent:Connect(function(player, origin, direction, weapon)
 	raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
 
 	local result = workspace:Raycast(origin, direction, raycastParams)
+	create_beam(origin, direction)
 	if result then
 		local hitPart = result.Instance
 		local hitHumanoid = hitPart.Parent:FindFirstChildOfClass("Humanoid")

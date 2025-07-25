@@ -1,7 +1,8 @@
 local DataStoreService = game:GetService("DataStoreService")
 local banStore = DataStoreService:GetDataStore("BanDataStore")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local BanEvent = ReplicatedStorage:WaitForChild("BanEvent")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local events = replicatedStorage:WaitForChild("Events")
+local BanEvent = events:WaitForChild("BanEvent")
 
 BanEvent.OnServerEvent:Connect(function(player)
 	-- Save ban to DataStore

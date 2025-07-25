@@ -19,6 +19,7 @@ return {
 		["Damage (Vest: Chest & Arms)"] = 27,
 		["Damage (Helmet)"] = 111,
 		["Damage (Vest: Stomach)"] = 34,
+		["Type"] = "primary",
 	},
 	["deagle"] = {
 		["Name"] = "Desert Eagle",
@@ -40,5 +41,6 @@ return {
 		["Damage (Vest: Chest & Arms)"] = 49,
 		["Damage (Helmet)"] = 191,
 		["Damage (Vest: Stomach)"] = 61,
+		["Type"] = "secondary",
 	},
 }

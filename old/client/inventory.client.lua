@@ -1,0 +1,11 @@
+local players = game:GetService("Players")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local events = replicatedStorage:WaitForChild("Events")
+local inventoryEvent: RemoteEvent = events:WaitForChild("InventoryEvent")
+-- local buyEvent = events:WaitForChild("BuyEvent")
+local weapons = require(replicatedStorage.Shared.weapons)
+local framework = require(replicatedStorage.Shared.instance)
+
+inventoryEvent.OnClientEvent:Connect(function(player)
+	framework:refresh_inventory()
+end)

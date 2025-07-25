@@ -4,3 +4,8 @@
 # Roblox Studio lock files
 /*.rbxlx.lock
 /*.rbxl.lock
+
+/server/node_modules
+/server/package-lock.json
+
+default.project.json
