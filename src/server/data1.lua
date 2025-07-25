@@ -1,6 +1,5 @@
 local data = {}
 
--- Replace 'export type' with 'type' for Luau type annotations (optional)
 type SendData = {
 	Url: string,
 	Method: string,
@@ -8,6 +7,7 @@ type SendData = {
 	Headers: { [string]: string }?,
 }
 
+-- Add custom types to fit return data
 type ReturnData = {
 	Astronauts: number?,
 }
