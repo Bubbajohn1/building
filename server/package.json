@@ -4,7 +4,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "node --watch ."
+    "run": "node --watch .",
+    "ngrok": "ngrok http http://localhost:3000"
   },
   "keywords": [],
   "author": "",
