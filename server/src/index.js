@@ -1,6 +1,4 @@
 const express = require("express");
-const crypto = require("crypto");
-const rateLimit = require("express-rate-limit");
 const cors = require("cors");
 
 const app = express();
@@ -21,7 +19,7 @@ function token(req, res, next) {
 	next();
 }
 
-// ✅ Endpoint with validation and HMAC
+// change to validation and HMAC
 app.post("/", token, (req, res) => {
 	res.json({ number: 5 });
 });
