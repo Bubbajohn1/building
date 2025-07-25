@@ -13,7 +13,14 @@ type ReturnData = {
 }
 
 local HttpService = game:GetService("HttpService")
+
+-- Change with a more secure way of authentication
+--
+--
 local secret = "s3cr3t-t0k3n-1234567890"
+--
+--
+--
 
 function mergeTables(t1, t2)
 	-- Merge t2 into t1 (t1 overwritten by t2 on same keys)
@@ -58,7 +65,6 @@ function data.request(body: SendData)
 	if success and result.Success then
 		local responseData = HttpService:JSONDecode(result.Body)
 		local format: ReturnData = {}
-
 
 		-- return format :: ReturnData
 		return responseData
