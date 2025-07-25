@@ -10,6 +10,4 @@ local params = {
 	},
 }
 
-print()
 local test = data.request(params)
-print(test.Astronauts)

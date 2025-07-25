@@ -59,11 +59,9 @@ function data.request(body: SendData)
 		local responseData = HttpService:JSONDecode(result.Body)
 		local format: ReturnData = {}
 
-		print(responseData)
 
-		format["Astronauts"] = responseData.number
-
-		return format :: ReturnData
+		-- return format :: ReturnData
+		return responseData
 	else
 		warn("HTTP Request returned:", result.StatusCode, result.Body)
 		return nil
