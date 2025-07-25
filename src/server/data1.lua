@@ -13,6 +13,7 @@ type ReturnData = {
 }
 
 local HttpService = game:GetService("HttpService")
+local secret = "s3cr3t-t0k3n-1234567890"
 
 function mergeTables(t1, t2)
 	-- Merge t2 into t1 (t1 overwritten by t2 on same keys)
@@ -25,8 +26,6 @@ function mergeTables(t1, t2)
 	end
 	return result
 end
-
-local secret = "s3cr3t-t0k3n-1234567890"
 
 function data.request(body: SendData)
 	local payload = ""
@@ -60,11 +59,13 @@ function data.request(body: SendData)
 		local responseData = HttpService:JSONDecode(result.Body)
 		local format: ReturnData = {}
 
+		print(responseData)
+
 		format["Astronauts"] = responseData.number
 
 		return format :: ReturnData
 	else
-		warn("HTTP Request failed", result.StatusCode, result.StatusMessage)
+		warn("HTTP Request returned:", result.StatusCode, result.Body)
 		return nil
 	end
 end
