@@ -32,6 +32,8 @@ function mergeTables(t1, t2)
 	return result
 end
 
+-- sends a http request with given params
+-- if successful returns the json body decoded
 function data.request(body: SendData)
 	local payload = ""
 	local jsonBody = ""
@@ -63,6 +65,7 @@ function data.request(body: SendData)
 	if success and result.Success then
 		return HttpService:JSONDecode(result.Body)
 	else
+		-- In production should be commented out
 		warn("HTTP Request returned:", result.StatusCode, result.Body)
 		return nil
 	end
