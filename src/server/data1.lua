@@ -8,9 +8,7 @@ type SendData = {
 }
 
 -- Add custom types to fit return data
-type ReturnData = {
-	Astronauts: number?,
-}
+type ReturnData = {}
 
 local HttpService = game:GetService("HttpService")
 
@@ -63,11 +61,7 @@ function data.request(body: SendData)
 	end)
 
 	if success and result.Success then
-		local responseData = HttpService:JSONDecode(result.Body)
-		local format: ReturnData = {}
-
-		-- return format :: ReturnData
-		return responseData
+		return HttpService:JSONDecode(result.Body)
 	else
 		warn("HTTP Request returned:", result.StatusCode, result.Body)
 		return nil
