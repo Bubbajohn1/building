@@ -23,13 +23,13 @@ end
 
 -- Fires a given request
 -- Returns the response from the server
-function Fire(v: Request)
+function Fire(request: Request)
 	-- for i, v in ipairs(datastore.requests) do
-	local type = v.type
+	local type = request.type
 
 	if type == "get" then
 		local body = {
-			Url = URL .. "/get?userid=" .. HttpService:UrlEncode(tostring(v.data.key)),
+			Url = URL .. "/get?userid=" .. HttpService:UrlEncode(tostring(request.data.key)),
 			Method = "GET",
 		}
 		local success, result = pcall(requests.request, body)
@@ -37,46 +37,58 @@ function Fire(v: Request)
 			return error("server errored with: ", result)
 		end
 
-		v.result = result
+		request.result = result
 	elseif type == "set" then
 		local body = {
 			Url = URL .. "/set",
 			Method = "POST",
-			Body = { v.data.key, v.data.payload },
+			Body = { request.data.key, request.data.payload },
 		}
 		local success, result = pcall(requests.request, body)
 		if not success then
 			return error("server errored with: ", result)
 		end
 
-		v.result = result
+		request.result = result
 	else
 		return error("unknown type: ", type)
 	end
 
-	print(v.result)
+	print(request.result)
 
-	return v.result
+	return request.result
 	-- end
 end
 
 function datastore:GetAsync(key)
-	return Fire(AddRequest({
+	local response = Fire(AddRequest({
 		type = "get",
 		data = {
 			key = key,
 		},
 	}))
+
+	if not response.Success or response.StatusCode ~= 200 then
+		error("Request failed: " .. response.StatusCode)
+	end
+
+	return response
 end
 
 function datastore:SetAsync(key, payload)
-	return Fire(AddRequest({
+	local response = Fire(AddRequest({
 		type = "set",
 		data = {
 			key = key,
-			payload = payload,
+			payload = payload or {},
 		},
 	}))
+
+	if not response.Success or response.StatusCode ~= 200 then
+		error("Request failed: " .. response.StatusCode)
+	end
+
+	return response
 end
 
 return datastore

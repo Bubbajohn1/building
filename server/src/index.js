@@ -50,7 +50,7 @@ app.get("/get", token, async (req, res) => {
 		console.log("Found value:", result);
 		res.json({ result });
 	} else {
-		res.status(404).send("Not Found");
+		res.status(404).send("Invalid userid, or no data found for user.");
 	}
   } catch (error) {
 	console.error("Error fetching data:", error);
@@ -67,9 +67,9 @@ app.post("/set", token, async (req, res) => {
 	return res.status(400).send("Missing userid or payload");
   }
 
-  console.log("Received request to set value for userid:", userid, "with payload:", payload);
   try {
 	const collection = db.collection("players");
+
 	const result = await collection.updateOne(
 	  { userid: userid },
 	  { $set: { data: payload } },
