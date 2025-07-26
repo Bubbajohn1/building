@@ -28,26 +28,64 @@ function token(req, res, next) {
 	next();
 }
 
-// change to validation and HMAC
-app.post("/addPlayer", token, async (req, res) => {
-  const body = req.body;
-  const userid = body.userid;
-  console.log("Received request to add player with userid:", userid);
-  console.log("DB status:", db ? "Connected" : "NOT connected");
-  try {
-	if(await db.collection("players").findOne({ userid })) {
-		return res.status(400).json({ error: "Player already exists" });
-	}
-	
-    await db.collection("players").insertOne({ userid });
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 app.get("/", token, (req, res) => {
 	res.send("Hello World!");
+});
+
+app.get("/get", token, async (req, res) => {
+	  const key = Number(req.query.userid);
+  if (!key) {
+    return res.status(400).send("Missing key");
+  }
+
+  console.log("Received request to get value for key:", key);
+
+  // Your DB logic here
+//   res.json({ key, value: "example value" });
+  try {
+	const collection = db.collection("players");
+	const result = await collection.findOne({ userid: key });
+	console.log("DB result:", result);
+	if (result) {
+		console.log("Found value:", result);
+		res.json({ result });
+	} else {
+		res.status(404).send("Not Found");
+	}
+  } catch (error) {
+	console.error("Error fetching data:", error);
+	res.status(500).send("Internal Server Error");
+	}
+});
+
+app.post("/set", token, async (req, res) => {
+  console.log("Received request:", req.body[0]);
+  const userid = Number(req.body[0]);
+  const payload = req.body[1];
+
+  if (!userid || !payload) {
+	return res.status(400).send("Missing userid or payload");
+  }
+
+  console.log("Received request to set value for userid:", userid, "with payload:", payload);
+  try {
+	const collection = db.collection("players");
+	const result = await collection.updateOne(
+	  { userid: userid },
+	  { $set: { data: payload } },
+	  { upsert: true }
+	);
+	if (result.modifiedCount > 0 || result.upsertedCount > 0) {
+	  console.log("Value set successfully");
+	  res.json({ success: true });
+	} else {
+	  console.log("No changes made to the database");
+	  res.status(304).send("Not Modified");
+	}
+  } catch (error) {
+	console.error("Error setting data:", error);
+	res.status(500).send("Internal Server Error");
+  }
 });
 
 app.listen(PORT, () => {

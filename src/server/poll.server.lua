@@ -1,0 +1,21 @@
+-- local datastore = require(script.Parent.data2)
+-- local old_ready = false
+
+-- coroutine.wrap(function()
+-- 	while task.wait(0.5) do
+-- 		local ready = datastore.is_ready
+-- 		print("loop is running...")
+-- 		if ready ~= old_ready then
+-- 			print("Detected readiness change")
+-- 			old_ready = ready
+-- 			if ready then
+-- 				print("Handling requests...")
+-- 				-- for i, v in ipairs(datastore.requests) do
+-- 				-- 	print(datastore:Fire(v))
+-- 				-- end
+-- 				table.clear(datastore.requests or {})
+-- 				datastore.is_ready = false
+-- 			end
+-- 		end
+-- 	end
+-- end)()

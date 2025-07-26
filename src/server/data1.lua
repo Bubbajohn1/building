@@ -3,7 +3,7 @@ local data = {}
 type SendData = {
 	Url: string,
 	Method: string,
-	Body: { [string]: any }?,
+	Body: { [any]: any }?,
 	Headers: { [string]: string }?,
 }
 

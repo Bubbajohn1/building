@@ -1,15 +1,7 @@
-local data = require(script.data1)
-
-local params = {
-	Url = "https://efad0cf70489.ngrok-free.app/addPlayer",
-	Method = "POST",
-	Headers = {},
-}
+local datastore = require(script.data2)
 
 game.Players.PlayerAdded:Connect(function(player: Player)
-	params.Body = {
-		["userid"] = player.UserId,
-	}
-
-	data.request(params)
+	print(datastore:SetAsync(player.UserId, {
+		cash = 100,
+	}))
 end)
