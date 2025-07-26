@@ -75,13 +75,14 @@ app.post("/set", token, async (req, res) => {
 	  { $set: { data: payload } },
 	  { upsert: true }
 	);
-	if (result.modifiedCount > 0 || result.upsertedCount > 0) {
-	  console.log("Value set successfully");
-	  res.json({ success: true });
-	} else {
-	  console.log("No changes made to the database");
-	  res.status(304).send("Not Modified");
-	}
+	// if (result.modifiedCount > 0 || result.upsertedCount > 0) {
+	//   console.log("Value set successfully");
+	//   res.json({ success: true });
+	// } else {
+	//   console.log("No changes made to the database");
+	//   res.status(304).send("Not Modified");
+	// }
+	res.json({ success: true });
   } catch (error) {
 	console.error("Error setting data:", error);
 	res.status(500).send("Internal Server Error");

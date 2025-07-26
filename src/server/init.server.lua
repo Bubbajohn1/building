@@ -1,7 +1,11 @@
 local datastore = require(script.data2)
 
 game.Players.PlayerAdded:Connect(function(player: Player)
-	print(datastore:SetAsync(player.UserId, {
-		cash = 100,
-	}))
+	local success, result = pcall(function()
+		return datastore:SetAsync(player.UserId, {
+			cash = 100,
+		})
+	end)
+
+	print(success, result)
 end)
