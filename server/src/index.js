@@ -45,10 +45,10 @@ app.get("/get", token, async (req, res) => {
   try {
 	const collection = db.collection("players");
 	const result = await collection.findOne({ userid: key });
-	console.log("DB result:", result);
+	// console.log("DB result:", result);
 	if (result) {
 		console.log("Found value:", result);
-		res.json({ result });
+		res.json({ success: true, result });
 	} else {
 		res.status(404).send("Invalid userid, or no data found for user.");
 	}
@@ -67,6 +67,7 @@ app.post("/set", token, async (req, res) => {
 	return res.status(400).send("Missing userid or payload");
   }
 
+  console.log("Received request to set value for userid:", userid, "with payload:", payload);
   try {
 	const collection = db.collection("players");
 

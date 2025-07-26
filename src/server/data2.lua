@@ -24,7 +24,6 @@ end
 -- Fires a given request
 -- Returns the response from the server
 function Fire(request: Request)
-	-- for i, v in ipairs(datastore.requests) do
 	local type = request.type
 
 	if type == "get" then
@@ -54,10 +53,7 @@ function Fire(request: Request)
 		return error("unknown type: ", type)
 	end
 
-	print(request.result)
-
 	return request.result
-	-- end
 end
 
 function datastore:GetAsync(key)
@@ -68,8 +64,11 @@ function datastore:GetAsync(key)
 		},
 	}))
 
-	if not response.Success or response.StatusCode ~= 200 then
-		error("Request failed: " .. response.StatusCode)
+	-- print(response)
+	-- print(response.success)
+
+	if not response.success then
+		return error("no success message for get request")
 	end
 
 	return response
@@ -84,8 +83,8 @@ function datastore:SetAsync(key, payload)
 		},
 	}))
 
-	if not response.Success or response.StatusCode ~= 200 then
-		error("Request failed: " .. response.StatusCode)
+	if not response.success then
+		return error("no success message for get request")
 	end
 
 	return response
